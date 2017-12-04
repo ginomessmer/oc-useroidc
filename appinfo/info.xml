@@ -9,7 +9,7 @@
     <namespace>UserOidc</namespace>
     <category>other</category>
     <dependencies>
-        <owncloud min-version="9" max-version="9.1"/>
+        <owncloud min-version="9" max-version="10"/>
     </dependencies>
     <types>
 		<authentication/>

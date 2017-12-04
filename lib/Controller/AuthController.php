@@ -60,16 +60,18 @@ class AuthController extends Controller {
         $name = $this->oidc->requestUserInfo('name');
         $user_id = $provider . '__' . $this->oidc->requestUserInfo('sub');
 
+        $defaultRedirectLocation = this->config->getSystemValue('openid_connect')[$provider]['defaultRedirectLocation'];
+
         $user = $this->usermanager->get($user_id);
         if(!$user) {
             $user = $this->createUser($user_id, $name, $email);
         }
         if(!$user) {
-            return new RedirectResponse('/');
+            return new RedirectResponse($defaultRedirectLocation);
         }
         $this->session['oidc_access_token'] = $this->oidc->getAccessToken();
         $this->doLogin($user, $user_id);
-        return new RedirectResponse('/');
+        return new RedirectResponse($defaultRedirectLocation);
 
     }
 
@@ -80,6 +82,7 @@ class AuthController extends Controller {
             $this->log->debug('login successful', ['app' => $this->appName]);
             $this->usersession->createSessionToken($this->request, $user->getUID(), $user->getUID());
             if ($this->usersession->isLoggedIn()) {
+                // TODO
             }
         }
                 
