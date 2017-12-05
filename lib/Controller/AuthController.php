@@ -11,6 +11,7 @@
 
 namespace OCA\UserOidc\Controller;
 
+use OC\Files\Filesystem;
 use OCP\IRequest;
 use OCP\IConfig;
 use OCP\ILogger;
@@ -60,13 +61,14 @@ class AuthController extends Controller {
         $name = $this->oidc->requestUserInfo('name');
         $user_id = $provider . '__' . $this->oidc->requestUserInfo('sub');
 
-        $defaultRedirectLocation = this->config->getSystemValue('openid_connect')[$provider]['defaultRedirectLocation'];
+        $defaultRedirectLocation = $this->config->getSystemValue('openid_connect')[$provider]['defaultRedirectLocation'];
 
         $user = $this->usermanager->get($user_id);
         if(!$user) {
             $user = $this->createUser($user_id, $name, $email);
         }
         if(!$user) {
+            // TODO: Include invalid user message 
             return new RedirectResponse($defaultRedirectLocation);
         }
         $this->session['oidc_access_token'] = $this->oidc->getAccessToken();
@@ -98,6 +100,7 @@ class AuthController extends Controller {
             $user = $this->usermanager->createUser($uid, $random_password);
             $user->setEMailAddress($email);
             $user->setDisplayName($name);
+            Filesystem::init($user->getUID(), '');
             return $user;
         }
     }

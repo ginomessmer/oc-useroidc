@@ -1,7 +1,7 @@
-# User Oidc
-Place this app in **owncloud/apps/**
+# User OIDC
+Place this app in **owncloud/apps/**. Make sure to run `composer install` inside the **useroidc** app in order to install required dependencies.
 
-Configure your openid connect providers in config.php like this:
+Configure your openid connect providers in **config.php** like this:
 ```php
   'openid_connect' => [
     'microsoft' => [
