@@ -100,7 +100,10 @@ class AuthController extends Controller {
             $user = $this->usermanager->createUser($uid, $random_password);
             $user->setEMailAddress($email);
             $user->setDisplayName($name);
-            Filesystem::init($user->getUID(), '');
+            
+            // Create the file directory and set permissions
+            $homeDir = $user->getHome();
+            mkdir($homeDir . '/files', 0757, true);
             return $user;
         }
     }
